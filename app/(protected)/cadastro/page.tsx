@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Navbar from "@/components/base/navbar";
 import React from "react";
-import bcrypt from 'bcryptjs'; // Substitua por 'bcryptjs' para que funcione no lado do cliente
+import bcrypt from 'bcryptjs';
 
 export default function Component() {
   const [formData, setFormData] = useState({
@@ -30,12 +30,10 @@ export default function Component() {
       alert('As senhas não coincidem');
       return;
     }
-    
-    // Hash da senha antes de enviá-la para a API externa
+
     const hashedPassword = await bcrypt.hash(formData.password, 10);
 
     const userDto = {
-      id: crypto.randomUUID(),
       email: formData.email,
       name: formData.fullName,
       cpf: formData.cpf,
@@ -45,7 +43,7 @@ export default function Component() {
 
     try {
       console.log(userDto);
-      const response = await fetch('https://localhost:3000/auth/signup', {
+      const response = await fetch('http://localhost:3000/auth/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

@@ -4,16 +4,43 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Navbar from "@/components/base/navbar";
 import React from "react";
+import Cookies from 'js-cookie';
 
 export default function Component() {
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    // Handle login submission
-    console.log('Login attempted:', { email })
-  }
+    e.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:3000/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        const token = data.accessToken;
+
+        // Salvar o token nos cookies com js-cookie
+        Cookies.set('accessToken', token, { expires: 1 }); // Expira em 1 dia
+
+        alert('Login realizado com sucesso!');
+        console.log('Token salvo no cookie:', token);
+        // Redirecionar ou realizar alguma ação adicional
+      } else {
+        const errorData = await response.json();
+        alert(`Erro: ${errorData.message}`);
+      }
+    } catch (error) {
+      console.error('Erro ao fazer login:', error);
+      alert('Erro ao fazer login');
+    }
+  };
 
   return (
     <div className="bg-bb-fundo min-h-screen">
