@@ -11,6 +11,7 @@ export default {
 		extend: {
 			colors: {
 				"bb-blue": '#465EFF',
+				"bb-fundo": '#3F3F0C',
 				"bb-yellow": '#FCFC30',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
