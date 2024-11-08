@@ -6,6 +6,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import Link from 'next/link';
 import { CircleChevronLeft } from 'lucide-react';
+import { useUser } from '@/context/Usercontext';
 
 const FinalizadoPage: React.FC = () => {
   const pathname = usePathname();
@@ -14,6 +15,7 @@ const FinalizadoPage: React.FC = () => {
   const [donationData, setDonationData] = useState<any>(null);
   const [itemsData, setItemsData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const { setUser, user } = useUser();
 
   useEffect(() => {
     const fetchDonationData = async () => {
@@ -49,7 +51,7 @@ const FinalizadoPage: React.FC = () => {
     if (donationId) {
       fetchDonationData();
     }
-  }, [donationId, router]);
+  }, [donationId, router, setUser, user]);
 
   if (loading) {
     return <p className="text-white">Carregando...</p>;
@@ -89,7 +91,7 @@ const FinalizadoPage: React.FC = () => {
       </div>
 
       <button
-        onClick={() => router.push('/home')}
+        onClick={() => window.location.href = '/home'}
         className="bg-bb-yellow rounded-xl p-2 mt-4"
       >
         Voltar ao Início

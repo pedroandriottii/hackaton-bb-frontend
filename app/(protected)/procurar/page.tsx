@@ -1,19 +1,19 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import { FaMapMarkerAlt } from 'react-icons/fa';
+import Navbar from '@/components/base/navbar_logado';
 import { ArrowLeft } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 
-interface AgencyLogado {
+interface Agency {
     distance: string;
     endereco: string;
     horarioFuncionamento: string;
     abertoAgora: boolean;
 }
 
-const calculateDistanceLogado = (lat1: number, lng1: number, lat2: number, lng2: number) => {
-    const R = 6371;
+const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
+    const R = 6371; // Raio da Terra em km
     const dLat = (lat2 - lat1) * (Math.PI / 180);
     const dLng = (lng2 - lng1) * (Math.PI / 180);
     const a =
@@ -21,21 +21,20 @@ const calculateDistanceLogado = (lat1: number, lng1: number, lat2: number, lng2:
         Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
         Math.sin(dLng / 2) * Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return (R * c).toFixed(2);
+    return (R * c).toFixed(2); // Retorna a distância em km com duas casas decimais
 };
 
-const AgencyLocatorLogado: React.FC = () => {
+const AgencyLocator: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<'me' | 'cep'>('me');
     const [cep, setCep] = useState('');
-    const [agencies, setAgencies] = useState<AgencyLogado[]>([]);
+    const [agencies, setAgencies] = useState<Agency[]>([]);
     const [distances, setDistances] = useState<string[]>([]);
     const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
-
-    const getStaticMapUrlLogado = (lat, lng) => {
+    const getStaticMapUrl = (lat, lng) => {
         return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=200x200&maptype=roadmap&markers=color:red%7Clabel:%7C${lat},${lng}&key=AIzaSyDy601rC6-0SOQJJ_KqVVNqjFKjWQTK9vI`;
     };
 
-    const handleLocateLogado = async (cepValue?: string) => {
+    const handleLocate = async (cepValue?: string) => {
         try {
             let response;
             if (selectedOption === 'me') {
@@ -44,10 +43,10 @@ const AgencyLocatorLogado: React.FC = () => {
                     response = await fetch(`http://localhost:3000/agency/nearest?lat=${latitude}&lng=${longitude}`);
 
                     if (response) {
-                        const data: AgencyLogado[] = await response.json();
+                        const data: Agency[] = await response.json();
                         setAgencies(data);
                         const calculatedDistances = data.map(agency =>
-                            calculateDistanceLogado(latitude, longitude, agency.localizacao.lat, agency.localizacao.lng)
+                            calculateDistance(latitude, longitude, agency.localizacao.lat, agency.localizacao.lng)
                         );
                         setDistances(calculatedDistances);
                     }
@@ -60,7 +59,7 @@ const AgencyLocatorLogado: React.FC = () => {
             }
 
             if (response) {
-                const data: AgencyLogado[] = await response.json();
+                const data: Agency[] = await response.json();
                 setAgencies(data);
             }
         } catch (error) {
@@ -70,7 +69,7 @@ const AgencyLocatorLogado: React.FC = () => {
 
     useEffect(() => {
         if (selectedOption === 'me') {
-            handleLocateLogado();
+            handleLocate();
         }
     }, [selectedOption]);
 
@@ -84,7 +83,7 @@ const AgencyLocatorLogado: React.FC = () => {
 
         setTypingTimeout(setTimeout(() => {
             if (selectedOption === 'cep' && newCep) {
-                handleLocateLogado(newCep);
+                handleLocate(newCep);
             }
         }, 500));
     };
@@ -92,19 +91,17 @@ const AgencyLocatorLogado: React.FC = () => {
     return (
         <div className="bg-bb-blue min-h-screen">
             <Link href="/dashboard">
-    <Button variant="ghost" size="icon" className="text-white hover:text-white/80" onClick={() => window.history.back()}>
-      <ArrowLeft className="h-6 w-6" />
-      <span className="sr-only">Voltar</span>
-    </Button>
-  </Link>
+                <Button variant="ghost" size="icon" className="text-white hover:text-white/80" onClick={() => window.history.back()}>
+                    <ArrowLeft className="h-6 w-6" />
+                    <span className="sr-only">Voltar</span>
+                </Button>
+            </Link>
+
             <div className="p-6 text-center">
-            
                 <h1 className="text-bb-yellow text-4xl font-bold">Pontos de coleta</h1>
                 <h1 className="text-bb-yellow text-4xl font-bold">próximos</h1>
             </div>
-            
 
-            {/* Seção de seleção na área azul */}
             <div className="flex flex-col items-center mb-4">
                 <div className="flex items-center space-x-2">
                     <button
@@ -146,7 +143,7 @@ const AgencyLocatorLogado: React.FC = () => {
                         >
                             <div className="flex flex-col items-center flex-none w-15">
                                 <img
-                                    src={getStaticMapUrlLogado(agency.localizacao.lat, agency.localizacao.lng)}
+                                    src={getStaticMapUrl(agency.localizacao.lat, agency.localizacao.lng)}
                                     alt="Map"
                                     className="w-20 h-20 object-cover rounded-md"
                                 />
@@ -159,12 +156,9 @@ const AgencyLocatorLogado: React.FC = () => {
 
                             <div className="flex flex-col space-y-2">
                                 <span className="text-blue-600 font-semibold">
-                                    <span className="inline-flex items-center text-blue-600 font-semibold">
-                                        <FaMapMarkerAlt className="text-red-500 text-lg mr-1" /> {/* Ícone de localização */}
-                                        {distances[index]} km de distância
-                                    </span> </span>
+                                    <i className="fas fa-map-marker-alt text-red-500"></i> {distances[index]} km de distância
+                                </span>
                                 <span className="font-bold text-blue-600">{agency.endereco}</span>
-                                {/* Botão "Ver no mapa" alinhado com o status */}
                                 <a
                                     href={`https://www.google.com/maps/search/?api=1&query=${agency.localizacao.lat},${agency.localizacao.lng}`}
                                     target="_blank"
@@ -185,4 +179,5 @@ const AgencyLocatorLogado: React.FC = () => {
     );
 };
 
-export default AgencyLocatorLogado;
+export default AgencyLocator;
+
