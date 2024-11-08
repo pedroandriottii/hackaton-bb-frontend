@@ -1,5 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
+import { FaMapMarkerAlt } from 'react-icons/fa';
 
 interface AgencyLogado {
     distance: string;
@@ -48,9 +49,9 @@ const AgencyLocatorLogado: React.FC = () => {
                         setDistances(calculatedDistances);
                     }
                 },
-                (error) => {
-                    console.error("Erro ao obter localização:", error);
-                });
+                    (error) => {
+                        console.error("Erro ao obter localização:", error);
+                    });
             } else if (cepValue) {
                 response = await fetch(`http://localhost:3000/agency/nearest-by-cep?cep=${cepValue}`);
             }
@@ -153,8 +154,10 @@ const AgencyLocatorLogado: React.FC = () => {
 
                             <div className="flex flex-col space-y-2">
                                 <span className="text-blue-600 font-semibold">
-                                    <i className="fas fa-map-marker-alt text-red-500"></i> {distances[index]} km de distância
-                                </span>
+                                    <span className="inline-flex items-center text-blue-600 font-semibold">
+                                        <FaMapMarkerAlt className="text-red-500 text-lg mr-1" /> {/* Ícone de localização */}
+                                        {distances[index]} km de distância
+                                    </span> </span>
                                 <span className="font-bold text-blue-600">{agency.endereco}</span>
                                 {/* Botão "Ver no mapa" alinhado com o status */}
                                 <a
