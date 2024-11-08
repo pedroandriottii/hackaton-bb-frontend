@@ -34,6 +34,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -66,7 +67,50 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@font-face {
+  font-family: 'BancoDoBrasilTextosBold';
+  src: url('/fonts/BancoDoBrasilTextos-Bold.ttf') format('truetype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasilTextosMedium';
+  src: url('/fonts/BancoDoBrasilTextos-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasilTextosRegular';
+  src: url('/fonts/BancoDoBrasilTextos-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'BancoDoBrasilTitulos';
+  src: url('/fonts/BancoDoBrasilTitulos-XBoldIt.ttf') format('truetype');
+  font-weight: 800;
+  font-style: italic;
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'BancoDoBrasilTitulos', sans-serif;
+}
+
+p {
+  font-family: 'BancoDoBrasilTextosRegular', sans-serif;
+}
+
+button {
+  font-family: 'BancoDoBrasilTextosBold', sans-serif;
 }
