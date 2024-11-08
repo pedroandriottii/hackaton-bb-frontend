@@ -2,7 +2,7 @@
 import Navbar from '@/components/base/navbar';
 import { CircleChevronLeft } from 'lucide-react';
 import Link from 'next/link';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import axios from 'axios';
 import Cookies from 'js-cookie';
@@ -12,12 +12,36 @@ const DetectadoPage: React.FC = () => {
   const item = searchParams.get('item');
   const itemData = item ? JSON.parse(decodeURIComponent(item)) : null;
   const router = useRouter();
+  const [imgUrl, setImgUrl] = React.useState<string | null>(null);
+  console.log('img:', itemData.img);
 
   if (!itemData) {
     return <p>Carregando...</p>;
   }
 
+  const handleGetImageUrl = async () => {
+    try {
+      const response = await axios.get(`http://localhost:3000/items/id/${itemData.id}/`, {
+        headers: {
+          'Authorization': `Bearer ${Cookies.get("accessToken")}`,
+        },
+      });
+      console.log("Imagem obtida com sucesso:", response.data);
+      setImgUrl(response.data.img);
+      return response.data.img;
+    } catch (error) {
+      console.error("Erro ao obter a imagem:", error);
+      alert("Erro ao obter a imagem. Tente novamente.");
+    }
+  }
+
+  // eslint-disable-next-line react-hooks/rules-of-hooks
+  useEffect(() => {
+    handleGetImageUrl(); // Executa handleGetImageUrl ao carregar a página
+  }, []);
+
   const handleConfirmDiscard = async () => {
+    console.log(itemData);
     try {
       const response = await axios.put(`http://localhost:3000/donations/${itemData.donationId}/finalize`, null, {
         headers: {
@@ -53,12 +77,22 @@ const DetectadoPage: React.FC = () => {
         <div className='bg-white p-4 rounded-xl flex flex-col items-center gap-4'>
           <p className='justify-center'>Dispositivo detectado com sucesso!</p>
           <div className='flex items-center'>
-            <h1>Imagem</h1>
+          <div>
+  {itemData.img && (
+    <img src={imgUrl} alt={itemData.title} className='w-[120px] h-full'/>
+  )}
+</div>
+
+
             <h2>{itemData.title}</h2>
           </div>
           <div className='flex justify-between'>
-            <p>Valor estimado</p>
+            <p>Valor estimado:</p>
             <p>{itemData.points} pts</p>
+          </div>
+          <div className='flex justify-between'>
+            <p>Peso estimado:</p>
+            <p>{itemData.weight} kg</p>
           </div>
         </div>
         <div className=''>
