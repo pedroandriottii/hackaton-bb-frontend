@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import Navbar from '@/components/base/navbar';
+import Navbar from '@/components/base/navbar_logado';
 
 interface Agency {
     distance: string;

@@ -1,5 +1,5 @@
 'use client'
-import Navbar from '@/components/base/navbar';
+import Navbar from '@/components/base/navbar_logado';
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';

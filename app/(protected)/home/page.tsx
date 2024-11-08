@@ -1,4 +1,4 @@
-import Navbar from '@/components/base/navbar';
+import Navbar from '@/components/base/navbar_logado';
 import { ChevronsRight, CircleDollarSign, Gift, MapPinned, Trash2 } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';

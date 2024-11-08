@@ -1,6 +1,6 @@
 'use client';
 import React from 'react';
-import { Coins, User } from 'lucide-react';
+import { Coins} from 'lucide-react';
 import { useUser } from '@/context/Usercontext';
 import Image from 'next/image';
 
@@ -9,9 +9,6 @@ const Navbar: React.FC = () => {
 
   return (
     <div className='bg-bb-yellow flex p-4 items-center justify-between'>
-      <div className='border border-bb-blue rounded-full p-2'>
-        <User className='text-bb-blue' />
-      </div>
       <Image
         src={"/logobb.svg"}
         width={30}
