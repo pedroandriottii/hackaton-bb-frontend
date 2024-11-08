@@ -2,10 +2,11 @@
 
 import { useState } from 'react'
 import Link from 'next/link'
-import Navbar from "@/components/base/navbar";
+import Navbar from "@/components/base/navbar_deslogado";
 import React from "react";
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { cookies } from 'next/headers';
 
 export default function Component() {
   const [email, setEmail] = useState('');
