@@ -1,4 +1,5 @@
 'use client'
+import Navbar from '@/components/base/navbar';
 import { CircleChevronLeft } from 'lucide-react';
 import Link from 'next/link';
 import React from 'react';

@@ -1,6 +1,6 @@
 'use client'
 import React, { useState, useEffect } from 'react';
-import Navbar from '@/components/base/navbar';
+import Navbar from '@/components/base/navbar_logado';
 
 interface Agency {
     distance: string;
@@ -89,9 +89,14 @@ const AgencyLocator: React.FC = () => {
         <div className="bg-bb-blue min-h-screen">
             <Navbar />
             <div className="p-6 text-center">
-                <button className="text-white text-sm font-semibold mb-4 block">Voltar</button>
-                <h1 className="text-bb-yellow text-2xl font-bold">Pontos de coleta</h1>
-                <h1 className="text-bb-yellow text-2xl font-bold">próximos</h1>
+                <button
+                    onClick={() => window.history.back()}
+                    className="text-white text-sm font-semibold mb-4 block"
+                >
+                    Voltar
+                </button>
+                <h1 className="text-bb-yellow text-4xl font-bold">Pontos de coleta</h1>
+                <h1 className="text-bb-yellow text-4xl font-bold">próximos</h1>
             </div>
 
             {/* Seção de seleção na área azul */}
@@ -134,7 +139,7 @@ const AgencyLocator: React.FC = () => {
                     agencies.map((agency, index) => (
                         <div
                             key={index}
-                            className="bg-white p-4 mb-4 rounded-md shadow-md flex items-center space-x-2 max-w-sm w-full mx-auto"
+                            className="bg-white p-4 mb-6 rounded-md shadow-md flex items-center space-x-6 max-w-sm w-full mx-auto"
                         >
                             {/* Imagem do mapa e status */}
                             <div className="flex flex-col items-center flex-none w-32">
@@ -159,9 +164,16 @@ const AgencyLocator: React.FC = () => {
                                 </span>
                                 <span className="font-bold text-blue-600">{agency.endereco}</span>
                                 <span className="text-gray-500">Ver horários</span>
-                                <button className="bg-yellow-400 text-bb-blue font-semibold rounded-full px-4 py-2 mt-2">
+                                {/* Botão "Ver no mapa" com link para o Google Maps */}
+                                <a
+                                    href={`https://www.google.com/maps/search/?api=1&query=${agency.localizacao.lat},${agency.localizacao.lng}`}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="bg-yellow-400 text-bb-blue font-semibold rounded-full px-2 py-1 mt-2 text-xs text-center mx-auto block max-w-fit"
+                                    style={{ width: "auto" }}
+                                >
                                     Ver no mapa
-                                </button>
+                                </a>
                             </div>
                         </div>
                     ))
@@ -174,3 +186,4 @@ const AgencyLocator: React.FC = () => {
 };
 
 export default AgencyLocator;
+
