@@ -35,15 +35,12 @@ const Discard: React.FC = () => {
             </div>
           </Link>
 
-          <Link href={'/recompensas'}>
+          <Link href={'/recompensa'}>
             <div className='bg-bb-yellow rounded-xl p-4 flex flex-col items-center justify-center py-8'>
               <Gift size={40} />
               <button className='mt-2 text-center'>Ver tabela de recompensas</button>
             </div>
           </Link>
-        </div>
-        <div>
-
         </div>
       </div>
     </div>
