@@ -1,9 +1,12 @@
-'use client'
-import Navbar from '@/components/base/navbar';
+'use client';
+import Navbar from '@/components/base/navbar_logado';
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 import { useRouter, useSearchParams } from 'next/navigation';
+import { ArrowLeft } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 
 const Discard: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -16,8 +19,6 @@ const Discard: React.FC = () => {
 
   const [donationId, setDonationId] = useState<string | null>(donationIdFromParams);
 
-  // Function to redirect to DetectadoPage with item data
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const redirectToDetectado = (itemData: any) => {
     const serializedItemData = JSON.stringify(itemData);
     router.push(`/descartar/detectado?item=${encodeURIComponent(serializedItemData)}`);
@@ -76,10 +77,8 @@ const Discard: React.FC = () => {
       const category = predictionResponse.data.data.category;
       setStatus("Escaneado com sucesso!");
 
-      // If donationId is not set, create a new donation
       let currentDonationId = donationId;
       if (!currentDonationId) {
-        // Create a new donation
         const donationData = {
           totalPoints: 0,
           items: [],
@@ -98,10 +97,7 @@ const Discard: React.FC = () => {
         setDonationId(currentDonationId);
       }
 
-      // Add the item to the donation
-      const addItemData = {
-        title: category,
-      };
+      const addItemData = { title: category };
 
       await axios.put(`http://localhost:3000/donations/${currentDonationId}/add-item`, addItemData, {
         headers: {
@@ -110,7 +106,6 @@ const Discard: React.FC = () => {
         },
       });
 
-      // Get the item properties
       const itemResponse = await axios.get(`http://localhost:3000/items/${category}`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -118,9 +113,8 @@ const Discard: React.FC = () => {
       });
 
       const itemData = itemResponse.data;
-      itemData.donationId = currentDonationId; // Include the donation ID in itemData
+      itemData.donationId = currentDonationId;
 
-      // Redirect to the detectado page with item properties and donationId
       redirectToDetectado(itemData);
 
     } catch (error) {
@@ -147,6 +141,12 @@ const Discard: React.FC = () => {
   return (
     <div className="bg-bb-blue min-h-screen">
       <div className='flex flex-col justify-around gap-4 w-full h-full'>
+        <Link href="/dashboard">
+          <Button variant="ghost" size="icon" className="text-white hover:text-white/80 mt-4 ml-4" onClick={() => window.history.back()}>
+            <ArrowLeft className="h-6 w-6" />
+            <span className="sr-only">Voltar</span>
+          </Button>
+        </Link>
         <div className="flex flex-col items-center py-4">
           <h1 className="text-bb-yellow text-2xl font-bold">Descartar resíduo eletrônico</h1>
           <p className="text-white mt-2">Escaneie o dispositivo que deseja descartar</p>

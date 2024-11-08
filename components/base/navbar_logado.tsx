@@ -47,9 +47,9 @@ const Navbar: React.FC = () => {
       {isDialogOpen && (
         <div className="absolute top-16 left-4 bg-white border border-gray-300 rounded shadow-lg p-4 w-48">
           <>
-            <Link href="/profile" className="block py-2 text-blue-500 hover:underline">
-              Ver Perfil
-            </Link>
+          <Link href="/perfil" className="block py-2 text-blue-500 hover:underline">
+            Ver Perfil
+          </Link>
             <button
               onClick={handleLogout}
               className="block w-full text-left py-2 text-red-500 hover:underline"

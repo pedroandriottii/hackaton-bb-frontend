@@ -3,6 +3,9 @@
 'use client'
 import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/base/navbar_logado';
+import { ArrowLeft } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 interface Agency {
     distance: string;
@@ -90,13 +93,14 @@ const AgencyLocator: React.FC = () => {
     return (
         <div className="bg-bb-blue min-h-screen">
             <Navbar />
+            <Link href="/dashboard">
+    <Button variant="ghost" size="icon" className="text-white hover:text-white/80" onClick={() => window.history.back()}>
+      <ArrowLeft className="h-6 w-6" />
+      <span className="sr-only">Voltar</span>
+    </Button>
+  </Link>
+            
             <div className="p-6 text-center">
-                <button
-                    onClick={() => window.history.back()}
-                    className="text-white text-sm font-semibold mb-4 block"
-                >
-                    Voltar
-                </button>
                 <h1 className="text-bb-yellow text-4xl font-bold">Pontos de coleta</h1>
                 <h1 className="text-bb-yellow text-4xl font-bold">próximos</h1>
             </div>
