@@ -88,6 +88,7 @@ export default function Component() {
                   type="text"
                   value={formData.fullName}
                   onChange={handleChange}
+                  placeholder="Digite seu nome completo"
                   className="w-full bg-white text-black h-12 px-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -103,6 +104,7 @@ export default function Component() {
                   type="text"
                   value={formData.cpf}
                   onChange={handleChange}
+                  placeholder="Ex.: 001.002.003-04"
                   className="w-full bg-white text-black h-12 px-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -118,6 +120,7 @@ export default function Component() {
                   type="tel"
                   value={formData.phone}
                   onChange={handleChange}
+                  placeholder="Ex.: (35) 9999-1020"
                   className="w-full bg-white text-black h-12 px-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -133,6 +136,7 @@ export default function Component() {
                   type="email"
                   value={formData.email}
                   onChange={handleChange}
+                  placeholder="Ex.: email@gmail.com"
                   className="w-full bg-white text-black h-12 px-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -148,6 +152,7 @@ export default function Component() {
                   type="password"
                   value={formData.password}
                   onChange={handleChange}
+                  placeholder="Digite sua senha"
                   className="w-full bg-white text-black h-12 px-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
@@ -163,6 +168,7 @@ export default function Component() {
                   type="password"
                   value={formData.confirmPassword}
                   onChange={handleChange}
+                  placeholder="Confirme sua senha"
                   className="w-full bg-white text-black h-12 px-3 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   required
                 />
