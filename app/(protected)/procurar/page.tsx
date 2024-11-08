@@ -3,17 +3,12 @@ import React, { useState, useEffect } from 'react';
 import Navbar from '@/components/base/navbar';
 
 interface Agency {
-    distance?: string;
+    distance: string;
     endereco: string;
     horarioFuncionamento: string;
     abertoAgora: boolean;
-    localizacao: {
-        lat: number;
-        lng: number;
-    };
 }
 
-// Função Haversine para calcular a distância entre duas coordenadas
 const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: number) => {
     const R = 6371; // Raio da Terra em km
     const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -23,58 +18,47 @@ const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: numbe
         Math.cos(lat1 * (Math.PI / 180)) * Math.cos(lat2 * (Math.PI / 180)) *
         Math.sin(dLng / 2) * Math.sin(dLng / 2);
     const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
-    return R * c; // Retorna a distância em km
+    return (R * c).toFixed(2); // Retorna a distância em km com duas casas decimais
 };
 
 const AgencyLocator: React.FC = () => {
     const [selectedOption, setSelectedOption] = useState<'me' | 'cep'>('me');
     const [cep, setCep] = useState('');
     const [agencies, setAgencies] = useState<Agency[]>([]);
-    const [userLocation, setUserLocation] = useState<{ lat: number; lng: number } | null>(null);
+    const [distances, setDistances] = useState<string[]>([]);
     const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
-
-    const getStaticMapUrl = (lat: number, lng: number) => {
-            return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=200x200&maptype=roadmap&markers=color:red%7Clabel:%7C${lat},${lng}&key=${process.env.GOOGLE_MAPS_API_KEY}`;
+    const getStaticMapUrl = (lat, lng) => {
+        return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=200x200&maptype=roadmap&markers=color:red%7Clabel:%7C${lat},${lng}&key=AIzaSyDy601rC6-0SOQJJ_KqVVNqjFKjWQTK9vI`;
     };
 
     const handleLocate = async (cepValue?: string) => {
         try {
-            let location: { lat: number; lng: number } | null = null;
-
+            let response;
             if (selectedOption === 'me') {
                 navigator.geolocation.getCurrentPosition(async (position) => {
-                    location = { lat: position.coords.latitude, lng: position.coords.longitude };
-                    setUserLocation(location);
-                    fetchAgencies(location);
+                    const { latitude, longitude } = position.coords;
+                    response = await fetch(`http://localhost:3000/agency/nearest?lat=${latitude}&lng=${longitude}`);
+
+                    if (response) {
+                        const data: Agency[] = await response.json();
+                        setAgencies(data);
+                        const calculatedDistances = data.map(agency =>
+                            calculateDistance(latitude, longitude, agency.localizacao.lat, agency.localizacao.lng)
+                        );
+                        setDistances(calculatedDistances);
+                    }
                 },
-                (error) => {
-                    console.error("Erro ao obter localização:", error);
-                });
+                    (error) => {
+                        console.error("Erro ao obter localização:", error);
+                    });
             } else if (cepValue) {
-                // Fetch location from the backend by converting the CEP
-                const response = await fetch(`http://localhost:3000/convert-cep?cep=${cepValue}`);
-                const data = await response.json();
-                location = { lat: data.lat, lng: data.lng };
-                setUserLocation(location);
-                fetchAgencies(location);
+                response = await fetch(`http://localhost:3000/agency/nearest-by-cep?cep=${cepValue}`);
             }
-        } catch (error) {
-            console.error("Erro ao buscar localização:", error);
-        }
-    };
 
-    const fetchAgencies = async (location: { lat: number; lng: number }) => {
-        try {
-            const response = await fetch(`http://localhost:3000/agency/nearest?lat=${location.lat}&lng=${location.lng}`);
-            const agenciesData: Agency[] = await response.json();
-
-            // Calculate distance for each agency
-            const agenciesWithDistance = agenciesData.map((agency) => ({
-                ...agency,
-                distance: calculateDistance(location.lat, location.lng, agency.localizacao.lat, agency.localizacao.lng).toFixed(2),
-            }));
-
-            setAgencies(agenciesWithDistance);
+            if (response) {
+                const data: Agency[] = await response.json();
+                setAgencies(data);
+            }
         } catch (error) {
             console.error("Erro ao buscar agências:", error);
         }
@@ -171,7 +155,7 @@ const AgencyLocator: React.FC = () => {
                             {/* Informações da agência */}
                             <div className="flex flex-col space-y-1">
                                 <span className="text-blue-600 font-semibold">
-                                    <i className="fas fa-map-marker-alt text-red-500"></i> {agency.distance} km de distância
+                                    <i className="fas fa-map-marker-alt text-red-500"></i> {distances[index]} km de distância
                                 </span>
                                 <span className="font-bold text-blue-600">{agency.endereco}</span>
                                 <span className="text-gray-500">Ver horários</span>
