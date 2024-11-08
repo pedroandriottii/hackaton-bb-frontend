@@ -18,11 +18,39 @@ export default function Component() {
   });
   const router = useRouter();
 
+  const formatCPF = (value: string) => {
+    if (!value) return '';
+    return value
+      .replace(/\D/g, '')
+      .replace(/(\d{3})(\d)/, '$1.$2') 
+      .replace(/(\d{3})(\d)/, '$1.$2') 
+      .replace(/(\d{3})(\d{1,2})$/, '$1-$2') 
+      .slice(0, 14); // Limita o CPF a 11 dígitos + formatação
+  };
+  
+  const formatPhone = (value: string) => {
+    if (!value) return '';
+    return value
+      .replace(/\D/g, '') // Remove tudo o que não é dígito
+      .replace(/(\d{2})(\d)/, '($1) $2') // Adiciona o código de área
+      .replace(/(\d{4})(\d)/, '$1-$2') // Adiciona o hífen
+      .slice(0, 15); // Limita a 11 dígitos + formatação
+  };
+  
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    
+    let formattedValue = value;
+    
+    if (name === 'cpf') {
+      formattedValue = formatCPF(value);
+    } else if (name === 'phone') {
+      formattedValue = formatPhone(value);
+    }
+
     setFormData(prev => ({
       ...prev,
-      [name]: value
+      [name]: formattedValue
     }));
   };
 
