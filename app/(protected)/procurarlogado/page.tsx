@@ -1,8 +1,5 @@
-// protected/procurarlogado/page.tsx
-
 'use client'
 import React, { useState, useEffect } from 'react';
-import Navbar from '@/components/base/navbar_logado'; // Navbar para usuário logado
 
 interface AgencyLogado {
     distance: string;
@@ -90,7 +87,6 @@ const AgencyLocatorLogado: React.FC = () => {
 
     return (
         <div className="bg-bb-blue min-h-screen">
-            <Navbar />
             <div className="p-6 text-center">
                 <button
                     onClick={() => window.history.back()}
