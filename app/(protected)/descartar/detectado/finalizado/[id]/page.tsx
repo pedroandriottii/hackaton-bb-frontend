@@ -89,7 +89,7 @@ const FinalizadoPage: React.FC = () => {
       </div>
 
       <button
-        onClick={() => router.push('/')}
+        onClick={() => router.push('/home')}
         className="bg-bb-yellow rounded-xl p-2 mt-4"
       >
         Voltar ao Início
