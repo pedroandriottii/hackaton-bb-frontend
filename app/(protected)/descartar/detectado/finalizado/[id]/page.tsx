@@ -11,16 +11,13 @@ const FinalizadoPage: React.FC = () => {
   const pathname = usePathname();
   const donationId = pathname.split('/').pop();
   const router = useRouter();
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [donationData, setDonationData] = useState<any>(null);
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [itemsData, setItemsData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchDonationData = async () => {
       try {
-        // Fetch donation details
         const donationResponse = await axios.get(`http://localhost:3000/donations/${donationId}`, {
           headers: {
             'Authorization': `Bearer ${Cookies.get('accessToken')}`,
@@ -28,8 +25,6 @@ const FinalizadoPage: React.FC = () => {
         });
         setDonationData(donationResponse.data);
 
-        // Fetch details for each item in the donation
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const itemsPromises = donationResponse.data.items.map(async (item: any) => {
           const itemResponse = await axios.get(`http://localhost:3000/items/id/${item.itemId}`, {
             headers: {
@@ -47,7 +42,6 @@ const FinalizadoPage: React.FC = () => {
         setLoading(false);
       } catch (error) {
         console.error('Erro ao buscar dados da doação:', error);
-        alert('Erro ao carregar os dados. Tente novamente.');
         router.push('/home');
       }
     };
