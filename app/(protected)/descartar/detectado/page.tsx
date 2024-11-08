@@ -25,7 +25,7 @@ const DetectadoPage: React.FC = () => {
         },
       });
       console.log("Doação finalizada com sucesso:", response.data);
-      router.push('/');
+      router.push(`detectado/finalizado/${itemData.donationId}`);
     } catch (error) {
       console.error("Erro ao finalizar a doação:", error);
       alert("Erro ao finalizar o descarte. Tente novamente.");
