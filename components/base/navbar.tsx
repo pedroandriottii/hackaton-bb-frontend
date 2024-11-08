@@ -1,6 +1,5 @@
 import React from 'react';
-import Link from 'next/link';
-import { User } from 'lucide-react';
+import { Coins, User } from 'lucide-react';
 
 const Navbar: React.FC = () => {
   return (
@@ -9,7 +8,10 @@ const Navbar: React.FC = () => {
         <User className='text-bb-yellow' />
       </div>
       <h1>LogoBB</h1>
-      <p>100 Pts</p>
+      <div className='flex items-center text-bb-blue bg-yellow-300 p-2 rounded-full gap-2'>
+        <p><Coins /></p>
+        <p>100</p>
+      </div>
     </div>
   );
 };
