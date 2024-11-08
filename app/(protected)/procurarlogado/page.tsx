@@ -119,7 +119,7 @@ const AgencyLocatorLogado: React.FC = () => {
 
                 {selectedOption === 'cep' && (
                     <div className="flex items-center space-x-2 mt-4">
-                        <label className="text-yellow-400 font-semibold">CEP:</label>
+                        <label className="text-bb-yellow text-1.5xl font-bold">CEP:</label>
                         <input
                             type="text"
                             placeholder="Digite o CEP"
@@ -138,11 +138,11 @@ const AgencyLocatorLogado: React.FC = () => {
                             key={index}
                             className="bg-white p-4 mb-6 rounded-md shadow-md flex items-center space-x-6 max-w-sm w-full mx-auto"
                         >
-                            <div className="flex flex-col items-center flex-none w-32">
+                            <div className="flex flex-col items-center flex-none w-15">
                                 <img
                                     src={getStaticMapUrlLogado(agency.localizacao.lat, agency.localizacao.lng)}
                                     alt="Map"
-                                    className="w-32 h-32 object-cover rounded-md"
+                                    className="w-20 h-20 object-cover rounded-md"
                                 />
                                 <span
                                     className={`font-semibold mt-2 ${agency.abertoAgora ? "text-green-500" : "text-red-500"}`}
@@ -151,17 +151,17 @@ const AgencyLocatorLogado: React.FC = () => {
                                 </span>
                             </div>
 
-                            <div className="flex flex-col space-y-1">
+                            <div className="flex flex-col space-y-2">
                                 <span className="text-blue-600 font-semibold">
                                     <i className="fas fa-map-marker-alt text-red-500"></i> {distances[index]} km de distância
                                 </span>
                                 <span className="font-bold text-blue-600">{agency.endereco}</span>
-                                <span className="text-gray-500">Ver horários</span>
+                                {/* Botão "Ver no mapa" alinhado com o status */}
                                 <a
                                     href={`https://www.google.com/maps/search/?api=1&query=${agency.localizacao.lat},${agency.localizacao.lng}`}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="bg-yellow-400 text-bb-blue font-semibold rounded-full px-2 py-1 mt-2 text-xs text-center mx-auto block max-w-fit"
+                                    className="bg-yellow-400 text-bb-blue font-semibold rounded-full px-4 py-2 text-center text-sm mx-auto block max-w-fit mt-[-1.5rem]"
                                     style={{ width: "auto" }}
                                 >
                                     Ver no mapa
