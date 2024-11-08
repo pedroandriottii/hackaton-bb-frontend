@@ -100,7 +100,7 @@ export default function Component() {
                 <h2 className="text-xl font-semibold text-[#4338ca] mb-4">Histórico</h2>
                 <div className="bg-gray-100 p-4 rounded-lg">
                   <p className="text-gray-700 mb-6">
-                    Você já evitou <span className="font-semibold">{userData.totalWeight} Kg de resíduos eletrônico</span> que foram descartardas de forma indevida em pontos de descarte BB.
+                    Você já evitou <span className="font-semibold">{userData.totalWeight} g de resíduos eletrônico</span> que foram descartardas de forma indevida em pontos de descarte BB.
                   </p>
                   <p className="text-gray-700 mb-6">
                     Obrigado por contribuir para a preservação do meio-ambiente, {userData.name}!

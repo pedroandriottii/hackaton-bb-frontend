@@ -41,7 +41,7 @@ const Navbar: React.FC = () => {
 
       <div className='flex items-center text-bb-blue bg-yellow-300 p-2 rounded-full gap-2'>
         <Coins />
-        <p>{user ? user.points : '0'}</p>
+        <p>{user ? user.points : ''}</p>
       </div>
 
       {isDialogOpen && (
