@@ -3,9 +3,10 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import Navbar from "@/components/base/navbar_deslogado";
-import React from "react";
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
+import { Button } from "@/components/ui/button"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
 
 export default function Component() {
   const [formData, setFormData] = useState({
@@ -16,32 +17,23 @@ export default function Component() {
     password: '',
     confirmPassword: ''
   });
+  const [success, setSuccess] = useState(false); // Novo estado de sucesso
   const router = useRouter();
 
-  const formatCPF = (value: string) => {
+  const formatCPF = (value) => {
     if (!value) return '';
-    return value
-      .replace(/\D/g, '')
-      .replace(/(\d{3})(\d)/, '$1.$2') 
-      .replace(/(\d{3})(\d)/, '$1.$2') 
-      .replace(/(\d{3})(\d{1,2})$/, '$1-$2') 
-      .slice(0, 14); // Limita o CPF a 11 dígitos + formatação
+    return value.replace(/\D/g, '').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d)/, '$1.$2').replace(/(\d{3})(\d{1,2})$/, '$1-$2').slice(0, 14);
   };
   
-  const formatPhone = (value: string) => {
+  const formatPhone = (value) => {
     if (!value) return '';
-    return value
-      .replace(/\D/g, '') // Remove tudo o que não é dígito
-      .replace(/(\d{2})(\d)/, '($1) $2') // Adiciona o código de área
-      .replace(/(\d{4})(\d)/, '$1-$2') // Adiciona o hífen
-      .slice(0, 15); // Limita a 11 dígitos + formatação
+    return value.replace(/\D/g, '').replace(/(\d{2})(\d)/, '($1) $2').replace(/(\d{4})(\d)/, '$1-$2').slice(0, 15);
   };
   
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    
     let formattedValue = value;
-    
+
     if (name === 'cpf') {
       formattedValue = formatCPF(value);
     } else if (name === 'phone') {
@@ -54,7 +46,7 @@ export default function Component() {
     }));
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
       return;
@@ -79,17 +71,22 @@ export default function Component() {
 
       if (!response.ok) {
         const errorData = await response.json();
+        console.error('Erro ao criar conta:', errorData);
       } else {
         const data = await response.json();
         const token = data.token;
 
         Cookies.set('accessToken', token, { expires: 1 });
-
-        router.push('/home');
+        setSuccess(true); // Define sucesso como verdadeiro
       }
     } catch (error) {
       console.error('Erro ao criar conta:', error);
     }
+  };
+
+  const handleSuccessClick = () => {
+    setSuccess(false);
+    router.push('/login');
   };
 
   return (
@@ -219,6 +216,26 @@ export default function Component() {
           </div>
         </div>
       </div>
+
+      {success && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
+          <Card className="max-w-sm w-full border-[#4338ca] border-2">
+            <CardContent className="pt-6">
+              <p className="text-center text-lg font-medium text-[#4338ca]">
+                Conta criada com sucesso!
+              </p>
+            </CardContent>
+            <CardFooter className="flex justify-center pb-6">
+              <Button
+                onClick={handleSuccessClick}
+                className="w-24 bg-[#ffeb3b] hover:bg-[#ffeb3b]/90 text-black font-medium"
+              >
+                OK
+              </Button>
+            </CardFooter>
+          </Card>
+        </div>
+      )}
     </div>
   );
 }
