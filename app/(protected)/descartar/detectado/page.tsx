@@ -6,7 +6,6 @@ import React from 'react';
 const DetectadoPage: React.FC = () => {
   return (
     <div className='bg-bb-blue flex flex-col gap-4'>
-      <Navbar />
       <Link href={'/'}>
         <div className='flex items-center bg-bb-yellow w-1/4 rounded-r-full gap-2 justify-center'>
           <CircleChevronLeft size={16} />
