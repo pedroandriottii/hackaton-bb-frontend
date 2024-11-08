@@ -5,10 +5,12 @@ import Link from 'next/link'
 import Navbar from "@/components/base/navbar";
 import React from "react";
 import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 export default function Component() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -21,24 +23,22 @@ export default function Component() {
         },
         body: JSON.stringify({ email, password })
       });
+      console.log(JSON.stringify({ email, password }));
 
       if (response.ok) {
         const data = await response.json();
-        const token = data.accessToken;
+        const token = data.token;
 
-        // Salvar o token nos cookies com js-cookie
-        Cookies.set('accessToken', token, { expires: 1 }); // Expira em 1 dia
+        Cookies.set('accessToken', token, { expires: 1 });
 
-        alert('Login realizado com sucesso!');
         console.log('Token salvo no cookie:', token);
-        // Redirecionar ou realizar alguma ação adicional
+
+        router.push('/home');
       } else {
         const errorData = await response.json();
-        alert(`Erro: ${errorData.message}`);
       }
     } catch (error) {
       console.error('Erro ao fazer login:', error);
-      alert('Erro ao fazer login');
     }
   };
 

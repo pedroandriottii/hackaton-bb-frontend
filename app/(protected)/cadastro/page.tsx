@@ -4,7 +4,8 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Navbar from "@/components/base/navbar";
 import React from "react";
-import bcrypt from 'bcryptjs';
+import Cookies from 'js-cookie';
+import { useRouter } from 'next/navigation';
 
 export default function Component() {
   const [formData, setFormData] = useState({
@@ -15,6 +16,7 @@ export default function Component() {
     password: '',
     confirmPassword: ''
   });
+  const router = useRouter();
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -27,22 +29,18 @@ export default function Component() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.password !== formData.confirmPassword) {
-      alert('As senhas não coincidem');
       return;
     }
-
-    const hashedPassword = await bcrypt.hash(formData.password, 10);
 
     const userDto = {
       email: formData.email,
       name: formData.fullName,
       cpf: formData.cpf,
       phone: formData.phone,
-      password: hashedPassword,
+      password: formData.password,
     };
 
     try {
-      console.log(userDto);
       const response = await fetch('http://localhost:3000/auth/signup', {
         method: 'POST',
         headers: {
@@ -50,16 +48,19 @@ export default function Component() {
         },
         body: JSON.stringify(userDto)
       });
-      console.log(response);
+
       if (!response.ok) {
         const errorData = await response.json();
-        alert(`Erro: ${errorData.message}`);
       } else {
-        alert('Conta criada com sucesso!');
+        const data = await response.json();
+        const token = data.token;
+
+        Cookies.set('accessToken', token, { expires: 1 });
+
+        router.push('/home');
       }
     } catch (error) {
       console.error('Erro ao criar conta:', error);
-      alert('Erro ao criar conta');
     }
   };
 
