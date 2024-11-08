@@ -1,9 +1,8 @@
 'use client'
-import Navbar from '@/components/base/navbar';
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 const Discard: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -11,7 +10,12 @@ const Discard: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const accessToken = Cookies.get("accessToken");
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const donationIdFromParams = searchParams.get('donationId');
 
+  const [donationId, setDonationId] = useState<string | null>(donationIdFromParams);
+
+  // Function to redirect to DetectadoPage with item data
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const redirectToDetectado = (itemData: any) => {
     const serializedItemData = JSON.stringify(itemData);
@@ -29,6 +33,7 @@ const Discard: React.FC = () => {
           console.error("Erro ao acessar a câmera:", error);
         }
       } else {
+        alert("API de câmera não suportada no navegador.");
       }
     };
 
@@ -70,36 +75,41 @@ const Discard: React.FC = () => {
       const category = predictionResponse.data.data.category;
       setStatus("Escaneado com sucesso!");
 
-      // Cria uma nova doação
-      const donationData = {
-        totalPoints: 0,
-        items: [],
-        date: new Date().toISOString(),
-        isFinished: false,
-      };
+      // If donationId is not set, create a new donation
+      let currentDonationId = donationId;
+      if (!currentDonationId) {
+        // Create a new donation
+        const donationData = {
+          totalPoints: 0,
+          items: [],
+          date: new Date().toISOString(),
+          isFinished: false,
+        };
 
-      const donationResponse = await axios.post("http://localhost:3000/donations", donationData, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${accessToken}`,
-        },
-      });
+        const donationResponse = await axios.post("http://localhost:3000/donations", donationData, {
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${accessToken}`,
+          },
+        });
 
-      const donationId = donationResponse.data.id;
+        currentDonationId = donationResponse.data.id;
+        setDonationId(currentDonationId);
+      }
 
-      // Adiciona o item à doação
+      // Add the item to the donation
       const addItemData = {
         title: category,
       };
 
-      await axios.put(`http://localhost:3000/donations/${donationId}/add-item`, addItemData, {
+      await axios.put(`http://localhost:3000/donations/${currentDonationId}/add-item`, addItemData, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${accessToken}`,
         },
       });
 
-      // Obtém as propriedades do item
+      // Get the item properties
       const itemResponse = await axios.get(`http://localhost:3000/items/${category}`, {
         headers: {
           'Authorization': `Bearer ${accessToken}`,
@@ -107,9 +117,9 @@ const Discard: React.FC = () => {
       });
 
       const itemData = itemResponse.data;
-      itemData.donationId = donationId; // Inclui o ID da doação no itemData
+      itemData.donationId = currentDonationId; // Include the donation ID in itemData
 
-      // Redireciona para a página detectado, passando as propriedades do item e o donationId
+      // Redirect to the detectado page with item properties and donationId
       redirectToDetectado(itemData);
 
     } catch (error) {
