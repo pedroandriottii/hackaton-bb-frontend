@@ -27,10 +27,8 @@ const Discard: React.FC = () => {
           video.srcObject = stream;
         } catch (error) {
           console.error("Erro ao acessar a câmera:", error);
-          alert("Não foi possível acessar a câmera.");
         }
       } else {
-        alert("API de câmera não suportada no navegador.");
       }
     };
 
@@ -137,7 +135,6 @@ const Discard: React.FC = () => {
 
   return (
     <div className="bg-bb-blue min-h-screen">
-      <Navbar />
       <div className='flex flex-col justify-around gap-4 w-full h-full'>
         <div className="flex flex-col items-center py-4">
           <h1 className="text-bb-yellow text-2xl font-bold">Descartar resíduo eletrônico</h1>

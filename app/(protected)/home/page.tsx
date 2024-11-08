@@ -6,7 +6,6 @@ import React from 'react';
 const Discard: React.FC = () => {
   return (
     <div className='bg-bb-blue min-h-screen w-full flex flex-col'>
-      <Navbar />
       <div className='p-4 flex-1 flex flex-col justify-around items-center'>
         <div>
 
