@@ -25,13 +25,14 @@ const calculateDistance = (lat1: number, lng1: number, lat2: number, lng2: numbe
 };
 
 const AgencyLocator: React.FC = () => {
+    const GOOGLE_MAPS_API_KEY = process.env.GOOGLE_MAPS_API_KEY;
     const [selectedOption, setSelectedOption] = useState<'me' | 'cep'>('me');
     const [cep, setCep] = useState('');
     const [agencies, setAgencies] = useState<Agency[]>([]);
     const [distances, setDistances] = useState<string[]>([]);
     const [typingTimeout, setTypingTimeout] = useState<NodeJS.Timeout | null>(null);
     const getStaticMapUrl = (lat, lng) => {
-        return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=200x200&maptype=roadmap&markers=color:red%7Clabel:%7C${lat},${lng}&key=AIzaSyDy601rC6-0SOQJJ_KqVVNqjFKjWQTK9vI`;
+        return `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=15&size=200x200&maptype=roadmap&markers=color:red%7Clabel:%7C${lat},${lng}&key=${GOOGLE_MAPS_API_KEY}`;
     };
 
     const handleLocate = async (cepValue?: string) => {
